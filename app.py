@@ -11,10 +11,10 @@ def validate_data(df):
     invalid_dates = ~df['DATE'].astype(str).str.match(date_pattern)
     errors.extend([(i, 'DATE', 'Invalid format (YYYY-MM-DD expected)') for i in df.index[invalid_dates]])
     
-    # Validate WORKFLOW Column
+    # Validate WORKFLOW Column (allowing only letters and underscores)
     workflow_pattern = r'^[a-zA-Z_]+$'
     invalid_workflow = df.loc[~df['WORKFLOW'].astype(str).str.match(workflow_pattern), 'WORKFLOW']
-    errors.extend([(i, 'WORKFLOW', f"Invalid format ('{workflow}' - only letters, no spaces or special characters)") for i, workflow in invalid_workflow.items()])
+    errors.extend([(i, 'WORKFLOW', f"Invalid format ('{workflow}' - only letters and underscores allowed, no spaces or special characters)") for i, workflow in invalid_workflow.items()])
     
     # Validate Quantity Column
     invalid_quantity = ~df['QUANTITY'].astype(str).str.match(r'^\d+$')
@@ -23,7 +23,7 @@ def validate_data(df):
     return errors
 
 def main():
-    st.title("ALKI PREDICT - CSV Format Validator")
+    st.title("CSV Format Validator")
     st.write("Upload a small portion of your CSV file to check formatting before sending the full file.")
     
     uploaded_file = st.file_uploader("Drag and drop a CSV file", type=["csv"])
@@ -45,11 +45,11 @@ def main():
             if errors:
                 error_df = pd.DataFrame(errors, columns=['Row', 'Column', 'Error'])
                 st.error("Errors detected in the file. Please review them below.")
-                st.dataframe(error_df)w
+                st.dataframe(error_df)
                 
                 # Provide a downloadable error report
-                output = io.StringIO()
-                error_df.to_csv(output, index=False)
+                output = io.BytesIO()
+                error_df.to_csv(output, index=False, encoding='utf-8')
                 output.seek(0)
                 st.download_button("Download Error Report", output, "error_report.csv", "text/csv")
             else:
