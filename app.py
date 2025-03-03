@@ -23,9 +23,20 @@ def validate_data(df):
     return errors
 
 def main():
-    st.title("CSV Format Validator")
+    st.title("Alki Predict - CSV Format Validator")
     st.write("Upload a small portion of your CSV file to check formatting before sending the full file.")
     
+    # Display data compliance rules
+    st.subheader("Data Compliance Rules")
+    st.write("""
+    To ensure your CSV file meets Alki's data format requirements, please follow these rules:
+    - **DATE**: Must be in `YYYY-MM-DD` format (e.g., 2025-03-03).
+    - **WORKFLOW**: Must contain only uppercase/lowercase letters and underscores (`_`). Spaces and special characters are not allowed.
+    - **QUANTITY**: Must be an integer (whole number). Decimal values are not accepted.
+    - The CSV file should have exactly **three columns** with headers: `DATE`, `WORKFLOW`, and `QUANTITY`.
+    - Allowed delimiters: `,` or `;`.
+    """)
+
     uploaded_file = st.file_uploader("Drag and drop a CSV file", type=["csv"])
     
     if uploaded_file is not None:
