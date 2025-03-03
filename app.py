@@ -7,9 +7,9 @@ def validate_data(df):
     errors = []
     
     # Validate Date Column
-    date_pattern = r'\d{2}/\d{2}/\d{4}'
+    date_pattern = r'\d{4}-\d{2}-\d{2}'
     invalid_dates = ~df['DATE'].astype(str).str.match(date_pattern)
-    errors.extend([(i, 'DATE', 'Invalid format (DD-MM-YYYY expected)') for i in df.index[invalid_dates]])
+    errors.extend([(i, 'DATE', 'Invalid format (YYYY-MM-DD expected)') for i in df.index[invalid_dates]])
     
     # Validate WORKFLOW Column
     workflow_pattern = r'^[a-zA-Z]+$'
@@ -45,7 +45,7 @@ def main():
             if errors:
                 error_df = pd.DataFrame(errors, columns=['Row', 'Column', 'Error'])
                 st.error("Errors detected in the file. Please review them below.")
-                st.dataframe(error_df)
+                st.dataframe(error_df)w
                 
                 # Provide a downloadable error report
                 output = io.StringIO()
