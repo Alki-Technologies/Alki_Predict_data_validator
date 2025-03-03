@@ -12,7 +12,7 @@ def validate_data(df):
     errors.extend([(i, 'DATE', 'Invalid format (YYYY-MM-DD expected)') for i in df.index[invalid_dates]])
     
     # Validate WORKFLOW Column
-    workflow_pattern = r'^[a-zA-Z]+$'
+    workflow_pattern = r'^[a-zA-Z_]+$'
     invalid_workflow = df.loc[~df['WORKFLOW'].astype(str).str.match(workflow_pattern), 'WORKFLOW']
     errors.extend([(i, 'WORKFLOW', f"Invalid format ('{workflow}' - only letters, no spaces or special characters)") for i, workflow in invalid_workflow.items()])
     
